@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GI GU ENDO 2024 Practice Test</title>
+    <style>
+        /* --- Color Variables --- */
+        :root {
+            /* Default: Dark Theme */
+            --bg-color: #2d343e; /* Dark background */
+            --container-bg: #3c424f; /* Slightly lighter container */
+            --text-color: #e8e6e3; /* Light text */
+            --question-text-color: #8ab4f8; /* Light blue for questions */
+            --border-color: #555; /* Darker borders */
+            --separator-color: #4a4f5a;
+            --label-bg: #454c5a;
+            --label-border: #6c757d;
+            --label-hover-bg: #525966;
+            --label-hover-border: #7a828a;
+            --button-bg: #8ab4f8;
+            --button-text: #202124;
+            --button-hover-bg: #a3c5f9;
+            --button-disabled-bg: #5f6368;
+            --feedback-correct-bg: #344e41;
+            --feedback-correct-text: #c7f9cc;
+            --feedback-correct-border: #52b788;
+            --feedback-incorrect-bg: #5e2129;
+            --feedback-incorrect-text: #f8d7da;
+            --feedback-incorrect-border: #a4133c;
+            --feedback-rationale-text: #adb5bd; /* Lighter gray for rationale */
+            --feedback-separator: #6c757d;
+            --radio-accent: #8ab4f8;
+        }
+
+        .light-theme {
+            --bg-color: #eef2f7;
+            --container-bg: #ffffff;
+            --text-color: #343a40;
+            --question-text-color: #0056b3;
+            --border-color: #dee2e6;
+            --separator-color: #e9ecef;
+            --label-bg: #f8f9fa;
+            --label-border: #ced4da;
+            --label-hover-bg: #e2e6ea;
+            --label-hover-border: #adb5bd;
+            --button-bg: #007bff;
+            --button-text: white;
+            --button-hover-bg: #0056b3;
+            --button-disabled-bg: #6c757d;
+            --feedback-correct-bg: #d1e7dd;
+            --feedback-correct-text: #0f5132;
+            --feedback-correct-border: #badbcc;
+            --feedback-incorrect-bg: #f8d7da;
+            --feedback-incorrect-text: #842029;
+            --feedback-incorrect-border: #f5c2c7;
+            --feedback-rationale-text: #495057;
+            --feedback-separator: #ccc;
+            --radio-accent: #007bff;
+        }
+
+        /* --- General Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.7;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 40px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #theme-toggle-button {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            padding: 8px 12px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: 1px solid var(--label-border);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            z-index: 1000; /* Ensure it's on top */
+             transition: background-color 0.3s, color 0.3s;
+        }
+         #theme-toggle-button:hover {
+             opacity: 0.8;
+         }
+
+
+        #quiz-container {
+            max-width: 900px;
+            margin: 80px auto 30px auto; /* Added top margin for toggle button */
+            background: var(--container-bg);
+            padding: 25px 35px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .question-block {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--separator-color);
+            transition: border-color 0.3s;
+        }
+
+        .question-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 5px;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 18px;
+            color: var(--question-text-color);
+            transition: color 0.3s;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 12px;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--label-border);
+            background-color: var(--label-bg);
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+
+        .options label:hover {
+            background-color: var(--label-hover-bg);
+            border-color: var(--label-hover-border);
+        }
+
+        .options input[type="radio"]:checked+span {
+             font-weight: bold;
+             color: var(--question-text-color);
+        }
+        .options input[type="radio"] {
+            margin-right: 12px;
+            accent-color: var(--radio-accent);
+        }
+
+        .check-button {
+            display: block;
+            margin-top: 15px;
+            padding: 8px 15px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .check-button:hover {
+            opacity: 0.85;
+        }
+
+         .check-button:disabled {
+             background-color: var(--button-disabled-bg);
+             cursor: not-allowed;
+             opacity: 0.7;
+         }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            display: none;
+            border: 1px solid transparent;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        .feedback.correct {
+            background-color: var(--feedback-correct-bg);
+            color: var(--feedback-correct-text);
+            border-color: var(--feedback-correct-border);
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background-color: var(--feedback-incorrect-bg);
+            color: var(--feedback-incorrect-text);
+            border-color: var(--feedback-incorrect-border);
+            display: block;
+        }
+
+        .feedback-status {
+             font-weight: bold;
+             font-size: 1.1em;
+             display: block;
+             margin-bottom: 8px;
+        }
+
+        .feedback-rationale {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--feedback-separator);
+            font-size: 0.9em;
+            color: var(--feedback-rationale-text);
+             transition: color 0.3s, border-color 0.3s;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--question-text-color); /* Use question text color */
+            margin-top: 30px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .question-block.answered .options label {
+            cursor: default;
+            opacity: 0.6;
+        }
+         .question-block.answered .options label:hover {
+            background-color: var(--label-bg); /* Prevent hover effect on answered */
+            border-color: var(--label-border);
+         }
+
+    </style>
+</head>
+<body>
+
+    <button id="theme-toggle-button">Toggle Theme</button>
+    <h1>GI GU ENDO 2024 Practice Test</h1>
+
+    <div id="quiz-container">
+        <!-- Questions will be loaded here by JavaScript -->
+    </div>
+
+    <script>
+        const quizData = [
+            // --- Paste the 30 question objects here ---
+             // Question 1
+            {
+                question: "A 32-year-old man presents to the clinic with a 4-day history of progressive weakness in his extremities. He recently recovered from an upper respiratory tract infection. On physical examination, he has symmetric weakness affecting both proximal and distal muscles, absent deep tendon reflexes, and intact sensation. Which of the following is the most likely underlying cause of this patient's condition?",
+                options: {
+                    A: "Autoimmune reaction triggered by infection",
+                    B: "Insufficient migration of neural crest cells during embryogenesis",
+                    C: "Failure of myelin sheath formation in the spinal cord",
+                    D: "Disruption of signaling between pharyngeal endoderm and neural crest cells",
+                    E: "Accumulation of methylmalonic acid due to vitamin deficiency"
+                },
+                correctAnswer: "A",
+                rationale: "The vignette describes symptoms consistent with Guillain-Barré syndrome. While not explicitly detailed, Slide 12 in the 'Development of the Pharyngeal Arches' mentions GBS as an option in a vignette testing application of knowledge, suggesting it's a known condition. However, the other options directly relate to specific embryological or nutritional deficiencies discussed in the other slides (neural crest cell migration, myelin sheath issues related to B12 deficiency, pharyngeal arch signaling issues). Although the mechanism of GBS isn't deeply covered, the pattern recognition of the vignette's symptoms (progressive weakness after infection, absent reflexes) points to a likely autoimmune/post-infectious neuropathy process, contrasting with the specific developmental/nutritional causes offered as distractors based on other slides. Given the NBME style emphasizes application, recognizing the symptom pattern as distinct from specific congenital causes from other slides is key."
+            },
+            // Question 2
+             {
+                 question: "A 5-year-old boy is brought to the pediatrician due to worsening pain and fatigue over the past few weeks. On physical examination, he appears pale and malnourished, with pinpoint hemorrhages on his skin and swollen, bleeding gums. His diet consists primarily of processed foods. Deficiency of which of the following vitamins is most likely contributing to this patient's clinical presentation?",
+                 options: {
+                     A: "Vitamin B1",
+                     B: "Vitamin B6",
+                     C: "Vitamin B9",
+                     D: "Vitamin B12",
+                     E: "Vitamin C"
+                 },
+                 correctAnswer: "E",
+                 rationale: "The patient presents with symptoms consistent with scurvy (fatigue, pale appearance, pinpoint hemorrhages/petechiae, swollen/bleeding gums). Scurvy is caused by Vitamin C deficiency. The vignette highlights poor diet as a risk factor. Vitamin C is an antioxidant and crucial for collagen synthesis; deficiency leads to weakened connective tissue (slide 29, Water Soluble Vitamins). Deficiencies of B1, B6, B9, and B12 cause different symptom profiles (beriberi, neurological/heme synthesis issues, megaloblastic anemia, etc.)."
+             },
+             // Question 3
+             {
+                 question: "A 3-day-old male newborn develops excessive drooling and is unable to feed without immediate regurgitation. Attempts to pass a nasogastric tube are unsuccessful. The mother had polyhydramnios during pregnancy. Which of the following is the most likely embryological basis for this newborn's condition?",
+                 options: {
+                     A: "Failure of recanalization of the duodenum",
+                     B: "Incomplete partitioning of the foregut by the tracheoesophageal septum",
+                     C: "Abnormal migration of neural crest cells into the hindgut wall",
+                     D: "Incomplete rotation of the stomach during development",
+                     E: "Persistence of the thyroglossal duct"
+                 },
+                 correctAnswer: "B",
+                 rationale: "The symptoms (excessive drooling, inability to feed, immediate regurgitation, inability to pass NG tube) and maternal history (polyhydramnios) are classic for esophageal atresia. Slide 11 in 'Development of the Gastrointestinal System' states that esophageal atresia results from failure of the foregut to partition completely into the esophagus and trachea by the tracheoesophageal septum. Option A relates to duodenal atresia (Slide 20, GI Dev), C relates to Hirschsprung's (Slide 52, GI Pathology), D relates to pyloric stenosis or malrotation (Slide 14, GI Dev; Slide 42, GI Dev), and E relates to thyroglossal duct cysts (Slide 41, GI Dev)."
+             },
+             // Question 4
+             {
+                 question: "A 68-year-old woman with a history of severe cardiac disease presents with sudden onset of severe abdominal pain, disproportionate to physical exam findings. She develops bloody diarrhea and signs of shock. Surgery reveals hemorrhagic infarction of the small bowel. Occlusion of which of the following arteries is the most likely cause of this patient's condition?",
+                 options: {
+                     A: "Celiac trunk",
+                     B: "Superior mesenteric artery",
+                     C: "Inferior mesenteric artery",
+                     D: "Right colic artery",
+                     E: "Marginal artery"
+                 },
+                 correctAnswer: "B",
+                 rationale: "Sudden, severe abdominal pain out of proportion to exam, bloody diarrhea, and shock in a patient with risk factors for vascular disease (cardiac disease) is highly suggestive of acute mesenteric ischemia leading to small bowel infarction. Slide 11 in 'Lower GI Pathology' shows a specimen of small bowel infarction due to a thrombosed superior mesenteric artery (SMA). The SMA supplies the midgut, including most of the small intestine (duodenum distal to bile duct, jejunum, ileum) (Slide 32, GI Dev; Slide 7, GI Dev; Slide 2, Superior/Inferior Mesenteric Arteries). The celiac trunk supplies the foregut (Slide 7, GI Dev), the IMA supplies the hindgut (Slide 7, GI Dev), the right colic artery is a branch of the SMA supplying the ascending colon (Slide 4, Superior/Inferior Mesenteric Arteries), and the marginal artery provides collateral circulation (Slide 7, Superior/Inferior Mesenteric Arteries)."
+             },
+             // Question 5
+             {
+                 question: "A 4-year-old presents with fever, abdominal cramps, and watery diarrhea. His symptoms began 12 hours after attending a family picnic where he ate fried rice. Vomiting is not a prominent symptom. Which of the following pathogens is the most likely cause of this patient's illness?",
+                 options: {
+                     A: "Vibrio cholerae",
+                     B: "Clostridium perfringens",
+                     C: "Enterotoxigenic E. coli (ETEC)",
+                     D: "Shigella sonnei",
+                     E: "Bacillus cereus"
+                 },
+                 correctAnswer: "E",
+                 rationale: "The vignette describes watery diarrhea with a relatively short incubation period (12 hours) after eating fried rice. Slide 15 in 'Bacterial Infections' lists Bacillus cereus as a cause of watery diarrhea associated with fried rice ingestion, often due to a pre-formed toxin causing symptoms within 2-6 hours. While other options can cause watery diarrhea, the association with fried rice and the incubation period strongly point to B. cereus. C. perfringens also produces a toxin causing diarrhea, but is often linked to cooked meats (Slide 16, Bacterial Infections). ETEC is a common cause of traveler's diarrhea, but the fried rice link is stronger for B. cereus (Slide 11, Bacterial Infections). Shigella causes dysentery (bloody diarrhea) (Slide 29, Bacterial Infections). Vibrio cholerae causes severe watery diarrhea but is linked to contaminated water or seafood (Slide 7, Bacterial Infections)."
+             },
+             // Question 6
+             {
+                 question: "A 32-year-old woman, recently treated with broad-spectrum antibiotics for pneumonia, develops severe, watery diarrhea. Flexible sigmoidoscopy shows pseudomembranes in the colon. Which of the following is the most likely mechanism by which the causative pathogen produces disease in this patient?",
+                 options: {
+                     A: "Inhibition of host cell protein synthesis",
+                     B: "Disruption of actin cytoskeleton via glycosylation and inactivation of Rho B",
+                     C: "Hyperactivation of host adenylate cyclase leading to increased fluid secretion",
+                     D: "Invasion and destruction of intestinal epithelial cells",
+                     E: "Stimulation of guanylyl cyclase leading to decreased sodium absorption"
+                 },
+                 correctAnswer: "B",
+                 rationale: "The clinical presentation (diarrhea after antibiotics, pseudomembranes) is classic for Clostridium difficile infection. Slide 19 in 'Bacterial Infections' describes C. difficile pathogenesis, noting that its toxins (TcdA, TcdB) disrupt the actin cytoskeleton by glycosylating and inactivating Rho B guanosine triphosphatases, leading to disrupted barrier function and apoptosis. Option A relates to Shiga toxin (though not the primary mechanism listed for C. diff toxins). Option C relates to Cholera toxin and ETEC LT toxin (Slide 8, Slide 12 Bacterial Infections). Option D relates to invasive pathogens causing dysentery (e.g., Shigella, EIEC) (Slide 30, Bacterial Infections). Option E relates to ETEC ST toxin (Slide 13, Bacterial Infections)."
+             },
+             // Question 7
+             {
+                 question: "A 15-year-old boy presents to the emergency department with a 6-hour history of cramping periumbilical pain that has shifted to the right lower abdominal quadrant and is now constant and more severe. He has vomited several times and has a fever. Physical examination shows tenderness and guarding in the right lower quadrant. Lab work shows an elevated white blood cell count. Which of the following best describes the likely mechanism of pain in this patient?",
+                 options: {
+                     A: "Visceral afferent fibers following sympathetic nerves to spinal cord level T10, then parietal somatic fibers to the right lower quadrant",
+                     B: "Visceral afferent fibers following parasympathetic nerves to spinal cord levels S2-S4",
+                     C: "Parietal somatic fibers following sympathetic nerves to spinal cord level T10",
+                     D: "Visceral afferent fibers following sympathetic nerves to spinal cord levels S2-S4",
+                     E: "Parietal somatic fibers following parasympathetic nerves to spinal cord levels S2-S4"
+                 },
+                 correctAnswer: "A",
+                 rationale: "The clinical presentation (migratory pain from periumbilical to RLQ, tenderness/guarding) is classic for acute appendicitis. Slide 52 in 'Superior and Inferior Mesenteric Arteries' (and Slide 27, Lower GI Pathology) explains that the initial periumbilical pain is visceral, carried by visceral afferent fibers following sympathetic nerves back to spinal cord level T10. As inflammation progresses and irritates the parietal peritoneum in the RLQ, sharp, localized pain is carried by parietal somatic fibers innervating the abdominal wall. Option B describes hindgut parasympathetic afferents (rectum). Options C and E misattribute somatic fibers to the initial visceral pain or hindgut innervation patterns. Option D misattributes visceral afferents to sacral levels."
+             },
+             // Question 8
+             {
+                 question: "A 60-year-old man with a history of heavy alcohol use presents to the emergency room with multiple bruises, swollen gums, and pinpoint hemorrhages on his skin. His diet for the past two years has consisted solely of red meat and diet soda. Deficiency of which of the following vitamins is the most likely diagnosis?",
+                 options: {
+                     A: "Vitamin B1",
+                     B: "Vitamin B6",
+                     C: "Vitamin C",
+                     D: "Vitamin B12",
+                     E: "Vitamin B3"
+                 },
+                 correctAnswer: "C",
+                 rationale: "The vignette describes a patient with a diet very low in fruits and vegetables (red meat and soda) and symptoms including multiple bruises (ecchymoses), swollen gums, and petechiae (pinpoint hemorrhages). This presentation is classic for scurvy, caused by Vitamin C deficiency (Slide 29, Water Soluble Vitamins). Vitamin C is needed for collagen synthesis and its deficiency causes weakened capillaries. Alcohol use is a risk factor for various deficiencies, but the specific symptoms point to Vitamin C."
+             },
+             // Question 9
+             {
+                 question: "A 7-month-old infant, exclusively breastfed, presents with failure to thrive, progressive loss of milestones, and shaking. Labs show macrocytic anemia. The mother's vitamin B12 levels are found to be undetectable due to an underlying autoimmune process. The clinical findings of macrocytosis and neurological symptoms in this infant are most likely due to deficiency of which of the following vitamins?",
+                 options: {
+                     A: "Vitamin B1",
+                     B: "Vitamin B6",
+                     C: "Vitamin B9",
+                     D: "Vitamin B12",
+                     E: "Vitamin B3"
+                 },
+                 correctAnswer: "D",
+                 rationale: "The vignette describes macrocytic anemia and neurological symptoms (loss of milestones, shaking) in an infant, and confirms maternal B12 deficiency. B12 deficiency leads to megaloblastic anemia (macrocytosis) and neurological problems (Slide 17, Water Soluble Vitamins). Folate deficiency (B9) also causes megaloblastic anemia but does *not* cause the characteristic neurological symptoms seen with B12 deficiency (Slide 11, Slide 17, Water Soluble Vitamins). Vitamin B1, B6, and B3 deficiencies cause different syndromes (beriberi, neurological/heme issues, pellagra, respectively)."
+             },
+             // Question 10
+             {
+                 question: "A 55-year-old man presents with abdominal pain and has not had a bowel movement for 4 days after eating only Slim Jims and crackers on a camping trip. An abdominal radiograph shows large amounts of stool in the colon. He is prescribed a medication that stimulates enteric nerves to cause peristalsis. Which of the following medications was most likely prescribed?",
+                 options: {
+                     A: "Bisacodyl",
+                     B: "Docusate sodium",
+                     C: "Lubiprostone",
+                     D: "Loperamide",
+                     E: "Magnesium citrate"
+                 },
+                 correctAnswer: "A",
+                 rationale: "The patient presents with symptoms of constipation (abdominal pain, no BM for 4 days, large amount of stool on X-ray). The question asks for a medication that stimulates enteric nerves to cause peristalsis. Slide 9 in 'Drugs of the Lower GI tract' describes Bisacodyl as a stimulant laxative that stimulates parasympathetic nerves in the colon to increase motility and secretion. Docusate sodium is an emollient laxative (softens stool). Lubiprostone increases fluid secretion in IBS-C. Loperamide is an anti-diarrheal (opioid agonist, decreases peristalsis). Magnesium citrate is an osmotic laxative (draws water into lumen)."
+             },
+              // Question 11
+             {
+                 question: "A 23-year-old woman presents with watery diarrhea after eating raw oysters at a local restaurant. She develops mild dehydration but does not have fever or bloody stool. Which of the following pathogens is the most likely cause of this patient's illness?",
+                 options: {
+                     A: "Enteroinvasive E. coli (EIEC)",
+                     B: "Yersinia enterocolitica",
+                     C: "Vibrio cholerae",
+                     D: "Shigella sonnei",
+                     E: "Campylobacter jejuni"
+                 },
+                 correctAnswer: "C",
+                 rationale: "The vignette describes watery diarrhea after consuming raw oysters (seafood). Slide 7 in 'Bacterial Infections' links Vibrio cholerae to contaminated water or seafood, causing watery diarrhea. While other Vibrio species can cause illness from seafood, V. cholerae is listed as a primary cause of watery diarrhea from seafood. EIEC and Shigella cause dysentery (bloody diarrhea) (Slide 27, Slide 30 Bacterial Infections). Yersinia is linked to mimicking appendicitis and can cause dysentery (Slide 27, Bacterial Infections). Campylobacter is a common cause of acute dysentery, linked to poultry (Slide 32, Bacterial Infections)."
+             },
+             // Question 12
+             {
+                 question: "A 70-year-old man presents with fatigue over the last year. Digital rectal exam reveals no masses. A stool sample is positive for occult blood. Colonoscopy is negative for any visible lesions. Angiography shows dilated and tortuous vascular channels in the mucosa and submucosa of the cecum. Which of the following is the most likely diagnosis?",
+                 options: {
+                     A: "Diverticulitis",
+                     B: "Angiodysplasia",
+                     C: "Colonic adenocarcinoma",
+                     D: "Chronic mesenteric ischemia",
+                     E: "Inflammatory bowel disease"
+                 },
+                 correctAnswer: "B",
+                 rationale: "The vignette describes fatigue, occult blood in stool (suggesting chronic blood loss), and specific angiography findings of dilated and tortuous vascular channels in the cecum. These findings are characteristic of angiodysplasia (Slide 13, Lower GI Pathology). Angiodysplasia is a common vascular abnormality causing GI bleeding, often in the cecum, and is seen as dilated vessels on histology/angiography. Diverticulitis is inflammation (often LLQ pain, fever) (Slide 24, Lower GI Pathology). Colon cancer would likely be visible on colonoscopy (Slide 54, Lower GI Pathology). Chronic mesenteric ischemia typically presents with postprandial pain (Slide 12, Lower GI Pathology). IBD would typically have inflammatory changes on endoscopy/biopsy (Slide 28, Lower GI Pathology)."
+             },
+             // Question 13
+             {
+                 question: "A 4-month-old infant presents with bilious vomiting and abdominal distention. An abdominal X-ray shows a \"double bubble\" sign, with air distending the stomach and proximal duodenum. Which of the following is the most likely embryological cause of this condition?",
+                 options: {
+                     A: "Abnormal rotation of the midgut loop",
+                     B: "Failure of the ventral pancreatic bud to fuse with the dorsal bud",
+                     C: "Incomplete recanalization of the duodenum",
+                     D: "Persistence of the vitelline duct",
+                     E: "Insufficient migration of neural crest cells"
+                 },
+                 correctAnswer: "C",
+                 rationale: "The symptoms (bilious vomiting, distention) and imaging (double bubble sign) are classic for duodenal atresia (Slide 20, GI Development). Slide 19 in 'Development of the Duodenum' and Slide 56 in 'Development of the Gastrointestinal Tract' describe the temporary obliteration and subsequent recanalization of the duodenal lumen during embryological development. Failure of this recanalization is the cause of duodenal atresia. Option A relates to malrotation (Slide 42, GI Dev). Option B relates to annular pancreas (Slide 27, GI Dev). Option D relates to Meckel's diverticulum (Slide 44, GI Dev). Option E relates to Hirschsprung's disease (Slide 52, GI Pathology)."
+             },
+             // Question 14
+             {
+                 question: "A 35-year-old woman presents with abdominal cramps and diarrhea that have occurred episodically over the past 10 years. Colonoscopy shows continuous inflammation from the rectum to the ascending colon. Biopsy shows increased chronic inflammation within the lamina propria and scattered neutrophils within the crypt epithelium. This patient's condition is most likely consistent with which of the following?",
+                 options: {
+                     A: "Crohn disease",
+                     B: "Ulcerative colitis",
+                     C: "Irritable bowel syndrome",
+                     D: "Celiac disease",
+                     E: "Infectious colitis"
+                 },
+                 correctAnswer: "B",
+                 rationale: "The vignette describes a chronic inflammatory condition of the colon with continuous involvement from the rectum to the ascending colon. Slide 28 in 'Lower GI Pathology' contrasts Crohn disease and Ulcerative Colitis, noting that UC has continuous colonic involvement beginning in the rectum and is limited to the mucosa and submucosa. Crohn disease has skip lesions and transmural inflammation. While the biopsy describes features seen in active colitis (neutrophils, cryptitis), the continuous pattern from rectum to ascending colon strongly points to UC. IBS is a functional disorder without inflammation. Celiac disease affects the small intestine. Infectious colitis is acute."
+             },
+             // Question 15
+             {
+                 question: "A 62-year-old man with a history of atrial fibrillation presents with a 3-day history of large amounts of blood mixed with stools. Colonoscopy notes copious amounts of blood in the colon but a bleeding source is identified in the terminal ileum. The rest of the terminal ileal mucosa appeared bluish. This patient's presentation is most likely related to which of the following processes?",
+                 options: {
+                     A: "Ischemic injury to the small intestine",
+                     B: "Ulcerative colitis causing backwash ileitis",
+                     C: "Meckel's diverticulum bleeding",
+                     D: "Angiodysplasia in the ileum",
+                     E: "Infectious ileitis"
+                 },
+                 correctAnswer: "A",
+                 rationale: "The patient has a history of atrial fibrillation, a risk factor for embolism. The description of bleeding originating from the terminal ileum and the bluish appearance of the mucosa (suggesting ischemia/infarction) strongly point to an acute ischemic event affecting the small intestine, likely due to an embolus from the heart lodging in the superior mesenteric artery or its branches supplying the ileum. While Meckel's diverticulum and angiodysplasia can cause bleeding in the ileum, the context of atrial fibrillation and the diffuse bluish appearance are more consistent with ischemia. Backwash ileitis is inflammation, not primarily ischemic bleeding. Infectious ileitis would have different endoscopic findings."
+             },
+              // Question 16
+             {
+                 question: "A 4-year-old girl is brought to the clinic because of fever, sore throat, and a rash. Physical examination reveals small vesicles on the tonsils and posterior palate, as well as a papulovesicular rash on the palms of her hands and soles of her feet. Which of the following is the most likely causative pathogen?",
+                 options: {
+                     A: "Rotavirus",
+                     B: "Norovirus",
+                     C: "Enterovirus",
+                     D: "Adenovirus",
+                     E: "Astrovirus"
+                 },
+                 correctAnswer: "C",
+                 rationale: "The vignette describes fever, sore throat, oral lesions (vesicles on tonsils/palate, described as enanthem herpangina in slides), and a rash on the palms and soles (exanthem). Slide 34 in 'Viral Infections and GALT' lists 'Hand, foot and mouth disease (Coxsackie A 16)' and 'Enanthems – herpangina (soft palate)' as enterovirus-associated diseases. Rotavirus, Norovirus, Adenovirus, and Astrovirus are primary causes of viral gastroenteritis with diarrhea/vomiting, but do not typically cause this specific pattern of oral and palm/sole lesions (Slide 8, 22, 29, 31 Viral Infections)."
+             },
+             // Question 17
+             {
+                 question: "A 25-year-old man presents with chronic diarrhea, abdominal pain, and weight loss. Endoscopy shows discontinuous areas of thickened bowel wall with ulcerations in the terminal ileum and ascending colon. Biopsies show transmural inflammation and noncaseating granulomas. Which of the following is the most likely diagnosis?",
+                 options: {
+                     A: "Ulcerative colitis",
+                     B: "Irritable bowel syndrome",
+                     C: "Celiac disease",
+                     D: "Crohn disease",
+                     E: "Infectious colitis"
+                 },
+                 correctAnswer: "D",
+                 rationale: "The vignette describes chronic diarrhea, abdominal pain, weight loss, and endoscopic findings of discontinuous lesions ('skip lesions') and thickened bowel wall in the terminal ileum and ascending colon. Biopsies confirm transmural inflammation and noncaseating granulomas. These findings are classic for Crohn disease. Slide 28 in 'Lower GI Pathology' lists skip lesions and transmural inflammation as features of Crohn's, contrasting with the continuous, mucosal involvement of Ulcerative Colitis (option A). IBS (option B) is a functional disorder without inflammation. Celiac disease (option C) affects the small intestine with villous atrophy. Infectious colitis (option E) is typically acute."
+             },
+             // Question 18
+             {
+                 question: "A 78-year-old man with a history of constipation develops fever and left lower quadrant abdominal pain. CT scan of the abdomen shows thickening of the sigmoid colon wall with pericolic fat stranding and a small pericolic abscess. Which of the following is the most likely initial step in management?",
+                 options: {
+                     A: "Colonoscopy",
+                     B: "Surgical resection of the sigmoid colon",
+                     C: "Outpatient oral antibiotics",
+                     D: "Intravenous antibiotics and bowel rest",
+                     E: "Barium enema"
+                 },
+                 correctAnswer: "D",
+                 rationale: "The vignette describes symptoms (LLQ pain, fever) and imaging findings (wall thickening, abscess) consistent with complicated diverticulitis. Slide 24 in 'Lower GI Pathology' lists fever, LLQ pain, leukocytosis, and perforation/abscess formation as features of diverticulitis. While not explicitly stated as the 'initial step,' severe/complicated diverticulitis typically requires hospitalization for IV antibiotics and bowel rest, especially when an abscess is present. Outpatient oral antibiotics might be used for uncomplicated diverticulitis. Colonoscopy and barium enema are diagnostic but generally avoided during acute inflammation due to perforation risk. Surgical resection is for complicated or recurrent cases."
+             },
+             // Question 19
+             {
+                 question: "A histology slide from a small intestinal biopsy shows tall columnar cells with a brush border containing enzymes essential for carbohydrate and protein digestion, and tight junctions allowing selective absorption. Which of the following cell types is most likely being described?",
+                 options: {
+                     A: "Goblet cell",
+                     B: "Paneth cell",
+                     C: "Enterocyte",
+                     D: "Enteroendocrine cell",
+                     E: "M-cell"
+                 },
+                 correctAnswer: "C",
+                 rationale: "The vignette describes absorptive cells of the small intestine with a brush border containing digestive enzymes and tight junctions. Slide 12 in 'Lower GI Histology' describes Enterocytes as absorptive cells with a brush border (microvilli covered by glycocalyx) containing enzymes and tight junctions allowing selective absorption. Goblet cells secrete mucus (Slide 14, Lower GI Histology). Paneth cells secrete antimicrobial substances (Slide 15, Lower GI Histology). Enteroendocrine cells secrete hormones (Slide 16, Lower GI Histology). M-cells transport antigens (Slide 17, Lower GI Histology)."
+             },
+             // Question 20
+             {
+                 question: "A 3-day-old male newborn presents with projectile, nonbilious vomiting after feeding. Physical examination reveals a palpable, olive-shaped mass in the upper abdomen. Which of the following is the most likely embryological cause of this condition?",
+                 options: {
+                     A: "Failure of recanalization of the esophagus",
+                     B: "Incomplete rotation of the stomach",
+                     C: "Hypertrophy of the circular muscle layer of the pylorus",
+                     D: "Failure of neural crest cell migration to the hindgut",
+                     E: "Persistence of the vitelline duct"
+                 },
+                 correctAnswer: "C",
+                 rationale: "The symptoms (projectile nonbilious vomiting, palpable olive-shaped mass) in a newborn point to pyloric stenosis. Slide 15 in 'Development of the Gastrointestinal System' states that pyloric stenosis is characterized by marked hypertrophy of the smooth muscle (circular and longitudinal) in the wall of the pylorus, leading to obstruction. Option A relates to esophageal stenosis (Slide 13, GI Dev). Option B relates to stomach rotation causing lesser sac formation (Slide 14, GI Dev). Option D relates to Hirschsprung's disease (Slide 52, GI Pathology). Option E relates to Meckel's diverticulum (Slide 44, GI Dev)."
+             },
+             // Question 21
+             {
+                 question: "A histology slide from the ileum shows large aggregates of lymphoid tissue in the submucosa, covered by specialized epithelial cells. Which of the following structures is most likely being examined?",
+                 options: {
+                     A: "Brunner's glands",
+                     B: "Peyer's patch",
+                     C: "Intestinal crypt",
+                     D: "Muscularis mucosa",
+                     E: "Lacteal"
+                 },
+                 correctAnswer: "B",
+                 rationale: "The vignette describes large aggregates of lymphoid tissue in the submucosa of the ileum, consistent with a Peyer's patch. Slide 21 in 'Lower GI Histology' describes Peyer's patches as large lymphoid nodule aggregates located in the ileum submucosa, covered by specialized M-cells. Brunner's glands are in the duodenum submucosa (Slide 20, Lower GI Histology). Intestinal crypts are glands extending into the lamina propria (Slide 15, Lower GI Histology). Muscularis mucosa is a muscle layer in the mucosa (Slide 18, Lower GI Histology). Lacteals are lymphatic capillaries in the villus lamina propria (Slide 8, Lower GI Histology)."
+             },
+             // Question 22
+             {
+                 question: "A 53-year-old woman with a history of Crohn's disease involving the terminal ileum, requiring previous resection, presents with increasing watery diarrhea. Labs reveal low vitamin B12 levels and evidence of fat malabsorption. Which of the following factors most likely contributes to her current diarrhea and malabsorption?",
+                 options: {
+                     A: "Lack of intrinsic factor from previous gastric surgery",
+                     B: "Loss of absorptive surface in the small bowel and impaired bile salt absorption",
+                     C: "Abnormal migration of neural crest cells in the hindgut",
+                     D: "Immune-mediated destruction of duodenal enterocytes",
+                     E: "Failure of pancreatic enzyme production"
+                 },
+                 correctAnswer: "B",
+                 rationale: "The vignette describes a patient with a history of Crohn's involving the terminal ileum and prior resection. The terminal ileum is the primary site for vitamin B12 and bile salt absorption. Extensive resection leads to malabsorption of these substances. Slide 31 in 'Small Bowel Disorders II' (Patient 1 Take Home Message) explicitly states B12 deficiency and fatty acid/bile salt malabsorption due to loss of absorptive surface from terminal ileum resection (in the context of Crohn's). Slide 39 in 'Small Bowel Disorders II' shows bile salt loss and steatorrhea after small bowel resection. Option A relates to pernicious anemia or gastrectomy, not terminal ileum issues. Option C relates to Hirschsprung's. Option D relates to Celiac disease affecting the duodenum. Option E relates to pancreatic insufficiency."
+             },
+             // Question 23
+             {
+                 question: "A histology slide shows simple columnar epithelium of the large intestine with numerous goblet cells and columnar absorptive cells, but notably lacking villi. Which of the following layers is immediately deep to this epithelium and contains blood vessels, nerves, and lymphatics?",
+                 options: {
+                     A: "Muscularis mucosa",
+                     B: "Submucosa",
+                     C: "Muscularis externa",
+                     D: "Serosa",
+                     E: "Lamina propria"
+                 },
+                 correctAnswer: "E",
+                 rationale: "The vignette describes the epithelium of the large intestine (simple columnar, goblet and absorptive cells, lacks villi - Slide 27, Lower GI Histology). The question asks for the layer immediately deep to the epithelium containing blood vessels, nerves, and lymphatics. Slide 30 in 'Lower GI Histology' shows the histology of the large intestine, indicating the Lamina propria is directly beneath the epithelium and contains blood and lymph capillaries, nerve fibers, and diffuse lymph tissue. The submucosa (Option B) is deeper than the lamina propria. Muscularis mucosa (Option A) is a muscle layer within the mucosa (epithelium + lamina propria + muscularis mucosa), but the primary neurovascular supply is in the lamina propria and submucosa. Muscularis externa (Option C) and Serosa (Option D) are outside the submucosa."
+             },
+             // Question 24
+             {
+                 question: "A 70-year-old man presents with signs and symptoms consistent with megaloblastic anemia. Lab tests reveal low serum vitamin B12 and elevated serum methylmalonic acid levels. He denies strict vegetarianism. He is diagnosed with pernicious anemia. Which of the following is the most likely underlying cause of this patient's vitamin deficiency?",
+                 options: {
+                     A: "Inadequate dietary intake",
+                     B: "Impaired intestinal absorption due to bacterial overgrowth",
+                     C: "Autoimmune destruction of gastric parietal cells",
+                     D: "Failure of intestinal absorption due to extensive ileal resection",
+                     E: "Drug-induced inactivation of vitamin B12"
+                 },
+                 correctAnswer: "C",
+                 rationale: "The vignette describes megaloblastic anemia with specific lab findings (low B12, high MMA - distinguishes from folate deficiency) and a diagnosis of pernicious anemia. Slide 19 in 'Water Soluble Vitamins' states that pernicious anemia is the most frequent cause of severe B12 deficiency and is due to autoimmune destruction of gastric parietal cells and/or intrinsic factor, which is necessary for B12 absorption. While options B and D can cause B12 malabsorption, they are not the direct cause of pernicious anemia specifically. Option A is less likely given the lab findings and lack of strict vegetarianism. Option E is not listed as a primary cause of pernicious anemia."
+             },
+             // Question 25
+             {
+                 question: "A histology slide shows the junction between simple columnar epithelium and stratified squamous epithelium, associated with a transition in muscular layers. Which of the following anatomical locations is most likely being examined?",
+                 options: {
+                     A: "Esophagogastric junction",
+                     B: "Duodenojejunal junction",
+                     C: "Ileocecal junction",
+                     D: "Rectoanal junction",
+                     E: "External anal sphincter"
+                 },
+                 correctAnswer: "D",
+                 rationale: "The vignette describes a transition from simple columnar to stratified squamous epithelium. Slide 37 in 'Lower GI Histology' shows the Rectoanal Junction as the site where the simple columnar mucosal lining of the rectum is replaced by stratified squamous epithelium of the anal canal. Other options represent transitions between different parts of the GI tract but not this specific epithelial change. The esophagogastric junction transitions from stratified squamous (esophagus) to simple columnar (stomach), but the question describes the reverse and specific layers/muscular changes. The duodenojejunal and ileocecal junctions are within the simple columnar epithelium of the small and large intestines. The external anal sphincter is a muscular structure, not an epithelial junction."
+             },
+             // Question 26
+             {
+                 question: "A 12-month-old previously healthy infant did not have a bowel movement for one day. Her abdomen is distended and tender to palpation with absent bowel sounds. Plain abdominal films show distended loops of small bowel with many air-fluid levels. Which of the following is the most likely etiology?",
+                 options: {
+                     A: "Pyloric stenosis",
+                     B: "Intussusception",
+                     C: "Hirschsprung disease",
+                     D: "Duodenal atresia",
+                     E: "Celiac disease"
+                 },
+                 correctAnswer: "B",
+                 rationale: "The vignette describes an infant with acute symptoms of bowel obstruction (abdominal distention, absent bowel sounds, air-fluid levels on X-ray) after being previously healthy. In this age group, intussusception is a common cause of acute obstruction. Slide 8 in 'Lower GI Pathology' describes intussusception as telescoping of bowel causing obstruction, and the question presents features consistent with this. Pyloric stenosis (option A) presents with projectile vomiting, typically younger infants. Hirschsprung disease (option C) is congenital megacolon due to failed neural crest migration, typically presenting with failure to pass meconium in newborns. Duodenal atresia (option D) presents with bilious vomiting and a double bubble sign, typically in newborns. Celiac disease (option E) is a malabsorption disorder, not acute obstruction."
+             },
+             // Question 27
+             {
+                 question: "A 28-year-old woman with a history of ulcerative colitis involving her entire colon for 10 years is undergoing a surveillance colonoscopy. Biopsies from flat colonic mucosa reveal abnormal glandular architecture, nuclear hyperchromasia, and loss of polarity. This patient is at increased risk for which of the following?",
+                 options: {
+                     A: "Pseudopolyps",
+                     B: "Toxic megacolon",
+                     C: "Ulcerative jejunitis",
+                     D: "Colorectal carcinoma",
+                     E: "Primary sclerosing cholangitis"
+                 },
+                 correctAnswer: "D",
+                 rationale: "The vignette describes a patient with long-standing, extensive ulcerative colitis undergoing surveillance. The biopsy findings (abnormal glandular architecture, nuclear changes, loss of polarity) are characteristic of dysplasia, which is a precursor to colorectal carcinoma in IBD. Slide 35 in 'Lower GI Pathology' states that both Crohn and Ulcerative Colitis patients are at risk for developing neoplasia, with risk factors including long duration and pancolitis, and notes that IBD-associated dysplasia precedes adenocarcinoma. Pseudopolyps and toxic megacolon (options A and B) are complications of active UC, but not the malignant transformation indicated by the biopsy. Ulcerative jejunitis (option C) is a complication of refractory celiac disease or Crohn's, not UC. Primary sclerosing cholangitis (option E) is an associated condition of UC, not a risk directly indicated by these biopsy findings."
+             },
+             // Question 28
+             {
+                 question: "A histology slide from the appendix shows abundant lymphoid nodules in the mucosa and submucosa. Which of the following is the primary function of the appendix based on this histological feature?",
+                 options: {
+                     A: "Absorption of electrolytes and water",
+                     B: "Secretion of alkaline mucus to neutralize acid",
+                     C: "Production of digestive enzymes",
+                     D: "Housing beneficial bacteria for gut flora recolonization",
+                     E: "Antigen transport from the lumen"
+                 },
+                 correctAnswer: "D",
+                 rationale: "The vignette describes the prominent lymphoid tissue in the appendix. While the appendix has immune function, the specific function emphasized in the provided materials related to its lymphoid tissue is housing beneficial bacteria. Slide 4 in 'Superior and Inferior Mesenteric Arteries' (and Slide 26, Lower GI Histology) describes the function of the appendix as housing good bacteria for re-colonization of gut flora. Absorption (option A) is a function of the large intestine generally. Secretion of alkaline mucus (option B) is a function of duodenal Brunner's glands. Production of digestive enzymes (option C) is primarily by the pancreas and small intestinal enterocytes. Antigen transport (option E) is a function of M-cells, typically in Peyer's patches, though M-cells are associated with lymphoid tissue. The lymphoid tissue in the appendix is related to immune function, but the primary listed function is bacterial reservoir."
+             },
+              // Question 29
+             {
+                 question: "A 6-month-old infant presents with abdominal distension and signs of bowel obstruction. Surgical exploration reveals abdominal contents herniated into the umbilical cord, contained within a sac of peritoneum and umbilical cord epithelium. Which of the following is the most likely embryological cause of this condition?",
+                 options: {
+                     A: "Abnormal closure of the abdominal wall around the umbilical cord",
+                     B: "Failure of the intestine to return to the abdomen after physiological herniation",
+                     C: "Incomplete rotation of the midgut loop",
+                     D: "Failure of neural crest cell migration",
+                     E: "Persistence of the vitelline duct"
+                 },
+                 correctAnswer: "B",
+                 rationale: "The vignette describes abdominal contents herniated into the umbilical cord, contained within a sac. This is the definition of an omphalocele. Slide 39 in 'Development of the Gastrointestinal System' (and Slide 60, GI Dev Text) states that an omphalocele is caused by failure of the intestine to return to the abdominal cavity after the normal physiological umbilical herniation around week 10. Option A relates to gastroschisis (contents extrude directly into amniotic cavity, usually lateral to umbilicus, not in a sac). Option C relates to malrotation/volvulus. Option D relates to Hirschsprung's. Option E relates to Meckel's diverticulum."
+             },
+             // Question 30
+             {
+                 question: "A histology slide from the submucosa of the duodenum shows glands that secrete alkaline mucus via small excretory ducts opening among the intestinal crypts. Which of the following is the primary function of this secretion?",
+                 options: {
+                     A: "Initiate protein digestion",
+                     B: "Facilitate fat absorption",
+                     C: "Neutralize gastric acid entering the duodenum",
+                     D: "Provide innate immunity in the lumen",
+                     E: "Stimulate intestinal peristalsis"
+                 },
+                 correctAnswer: "C",
+                 rationale: "The vignette describes Brunner's glands in the duodenum submucosa that secrete alkaline mucus (Slide 20, Lower GI Histology). Slide 20 explicitly states that this mucus is alkaline and neutralizes chyme entering the duodenum, making the contents less acidic for pancreatic enzyme action. Protein digestion (option A) is initiated in the stomach (pepsin) and completed in the small intestine lumen/brush border. Fat absorption (option B) involves bile salts and enterocytes. Innate immunity (option D) is primarily associated with Paneth cells. Intestinal peristalsis (option E) is controlled by smooth muscle layers and the myenteric plexus."
+             }
+            // ... Add all 30 questions here
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const themeToggleButton = document.getElementById('theme-toggle-button');
+        const bodyElement = document.body;
+
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                bodyElement.classList.add('light-theme');
+                themeToggleButton.textContent = 'Switch to Dark Mode';
+            } else {
+                bodyElement.classList.remove('light-theme');
+                themeToggleButton.textContent = 'Switch to Light Mode';
+            }
+            localStorage.setItem('quizTheme', theme); // Save preference
+        }
+
+        function loadQuiz() {
+            quizData.forEach((qData, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.classList.add('question-block');
+                questionBlock.id = `q${index}`;
+
+                const questionText = document.createElement('p');
+                questionText.classList.add('question-text');
+                questionText.innerHTML = `${index + 1}. ${qData.question}`;
+                questionBlock.appendChild(questionText);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('options');
+
+                for (const optionKey in qData.options) {
+                    const optionId = `q${index}_${optionKey}`;
+
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = `q${index}`;
+                    radioInput.value = optionKey;
+                    radioInput.id = optionId;
+
+                    const label = document.createElement('label');
+                    label.htmlFor = optionId;
+
+                    const labelText = document.createElement('span');
+                    labelText.textContent = `${optionKey}. ${qData.options[optionKey]}`;
+
+                    label.appendChild(radioInput);
+                    label.appendChild(labelText);
+
+                    optionsDiv.appendChild(label);
+                }
+                questionBlock.appendChild(optionsDiv);
+
+                const checkButton = document.createElement('button');
+                checkButton.textContent = 'Check Answer';
+                checkButton.classList.add('check-button');
+                checkButton.onclick = () => checkAnswer(index);
+                questionBlock.appendChild(checkButton);
+
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.classList.add('feedback');
+                questionBlock.appendChild(feedbackDiv);
+
+                quizContainer.appendChild(questionBlock);
+            });
+        }
+
+        function checkAnswer(questionIndex) {
+            const questionBlockElement = document.getElementById(`q${questionIndex}`);
+            const selectedRadioButton = questionBlockElement.querySelector('input[type="radio"]:checked');
+
+            if (questionBlockElement.classList.contains('answered')) return;
+            if (!selectedRadioButton) {
+                alert("Please select an answer first.");
+                return;
+            }
+
+            questionBlockElement.classList.add('answered');
+
+            const selectedOptionKey = selectedRadioButton.value;
+            const qData = quizData[questionIndex];
+            const feedbackDiv = questionBlockElement.querySelector('.feedback');
+            const correct = selectedOptionKey === qData.correctAnswer;
+
+            let feedbackHTML = '';
+
+            if (correct) {
+                feedbackHTML = `<span class="feedback-status">Correct!</span>`;
+                feedbackDiv.className = 'feedback correct';
+            } else {
+                 feedbackHTML = `<span class="feedback-status">Incorrect.</span> The correct answer is ${qData.correctAnswer}.`;
+                feedbackDiv.className = 'feedback incorrect';
+            }
+
+            feedbackHTML += `<div class="feedback-rationale"><strong>Rationale:</strong> ${qData.rationale}</div>`;
+            feedbackDiv.innerHTML = feedbackHTML;
+
+            const radioButtons = questionBlockElement.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(rb => { rb.disabled = true; });
+            const checkButton = questionBlockElement.querySelector('.check-button');
+            checkButton.disabled = true;
+        }
+
+        // Theme Toggling Logic
+        themeToggleButton.addEventListener('click', () => {
+            if (bodyElement.classList.contains('light-theme')) {
+                applyTheme('dark');
+            } else {
+                applyTheme('light');
+            }
+        });
+
+        // Load Initial Theme & Quiz
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('quizTheme') || 'dark'; // Default to dark
+            applyTheme(savedTheme);
+            loadQuiz();
+        });
+
+    </script>
+
+</body>
+</html>
